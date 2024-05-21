@@ -1,0 +1,38 @@
+linters:
+  enable:
+    - errorlint
+    - exportloopref
+    - goprintffuncname
+    - misspell
+    - nakedret
+    - noctx
+    - rowserrcheck
+    - structcheck
+    - unconvert
+    - unparam
+  disable:
+    - errcheck
+
+linters-settings:
+  govet:
+    disable-all: true
+    enable:
+      - nilness
+      - shadow
+      - unusedwrite
+  misspell:
+    locale: US
+  unparam:
+    check-exported: true
+
+output:
+  print-issued-lines: false
+
+run:
+  timeout: 5m
+
+issues:
+  exclude:
+    - Using the variable on range scope .* in function literal
+    - declaration of "(err|ctx)" shadows declaration at
+  exclude-use-default: false

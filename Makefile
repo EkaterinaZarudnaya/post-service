@@ -13,7 +13,7 @@ build:
 
 .PHONY: lint
 lint:
-	$(GOLANGCILINT) run --out-format=github-actions -- ./...
+	$(GOLANGCILINT) run -v
 
 PHONY: test
 test:

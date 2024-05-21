@@ -53,20 +53,26 @@ func (s *Service) GetPostById(id int) (models.Post, error) {
 	return post, err
 }
 
-func (s *Service) UpdatePostById(id int, post models.Post) error {
+func (s *Service) UpdatePostById(id int, updatedPost models.Post) error {
 	var existingPost models.Post
 	err := s.db.First(&existingPost, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("post not found")
 	}
-	post.ID = existingPost.ID
-	return s.db.Model(&existingPost).Updates(post).Error
+	
+	updatedPost.ID = existingPost.ID
+	return s.db.Model(&existingPost).Updates(updatedPost).Error
 }
 
 func (s *Service) DeletePostById(id int) error {
-	err := s.db.Delete(&models.Post{}, id).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New("post not found")
+	var post models.Post
+	if err := s.db.First(&post, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return errors.New("post not found")
+		}
+		return err
 	}
+	
+	err := s.db.Delete(&post).Error
 	return err
 }

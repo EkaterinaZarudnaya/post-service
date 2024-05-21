@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"net/http"
 	"post-service/configs"
 	"post-service/handlers"
 	service "post-service/services"
@@ -28,4 +29,8 @@ func Router(router *gin.Engine) {
 		post.DELETE("/:id", h.DeletePostById)
 
 	}
+
+	router.GET("/welcome", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Welcome!"})
+	})
 }

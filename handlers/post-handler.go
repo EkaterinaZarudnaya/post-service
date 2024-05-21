@@ -90,13 +90,13 @@ func (h *Handler) UpdatePostById(c *gin.Context) {
 		return
 	}
 
-	new_post, err := h.service.GetPostById(id)
+	newPost, err := h.service.GetPostById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, new_post)
+	c.JSON(http.StatusOK, newPost)
 }
 
 func (h *Handler) DeletePostById(c *gin.Context) {
