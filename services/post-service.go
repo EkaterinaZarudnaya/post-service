@@ -12,7 +12,7 @@ type PostService interface {
 	NewPost(post models.Post) error
 	GetPosts() ([]models.Post, error)
 	GetPostById(id int) (models.Post, error)
-	UpdatePost(post models.Post) error
+	UpdatePostById(id int, post models.Post) error
 	DeletePostById(id int) error
 }
 
@@ -53,12 +53,14 @@ func (s *Service) GetPostById(id int) (models.Post, error) {
 	return post, err
 }
 
-func (s *Service) UpdatePost(post models.Post) error {
-	err := s.db.Model(&post).Updates(post).Error
+func (s *Service) UpdatePostById(id int, post models.Post) error {
+	var existingPost models.Post
+	err := s.db.First(&existingPost, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("post not found")
 	}
-	return err
+	post.ID = existingPost.ID
+	return s.db.Model(&existingPost).Updates(post).Error
 }
 
 func (s *Service) DeletePostById(id int) error {

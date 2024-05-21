@@ -1,10 +1,11 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"post-service/configs"
-	"post-service/handler"
-	"post-service/services"
+	"post-service/handlers"
+	service "post-service/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Router(router *gin.Engine) {
@@ -16,14 +17,14 @@ func Router(router *gin.Engine) {
 		panic("Failed to connect to database: " + err.Error())
 	}
 
-	h := handler.NewHandler(svc)
+	h := handlers.NewPostHandler(svc)
 
-	post := router.Group("/posts")
+	post := router.Group("api/posts")
 	{
 		post.POST("/", h.NewPost)
 		post.GET("/", h.GetPosts)
 		post.GET("/:id", h.GetPostById)
-		post.PUT("/", h.UpdatePost)
+		post.PUT("/:id", h.UpdatePostById)
 		post.DELETE("/:id", h.DeletePostById)
 
 	}

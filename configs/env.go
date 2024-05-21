@@ -18,6 +18,6 @@ func GetEnv() string {
 	dbName := os.Getenv("DB_NAME")
 	dbPort := os.Getenv("DB_PORT")
 
-	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPwd + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable TimeZone=Europe/Kyiv"
+	dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPwd + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable TimeZone=Europe/Kyiv search_path=posts"
 	return dsn
 }

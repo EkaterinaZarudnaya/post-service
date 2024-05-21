@@ -1,9 +1,9 @@
-package handler
+package handlers
 
 import (
 	"net/http"
 	"post-service/models"
-	"post-service/services"
+	service "post-service/services"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ type Handler struct {
 	validate *validator.Validate
 }
 
-func NewHandler(service service.PostService) *Handler {
+func NewPostHandler(service service.PostService) *Handler {
 	return &Handler{
 		service:  service,
 		validate: validator.New(),
@@ -68,7 +68,12 @@ func (h *Handler) GetPostById(c *gin.Context) {
 	c.JSON(http.StatusOK, post)
 }
 
-func (h *Handler) UpdatePost(c *gin.Context) {
+func (h *Handler) UpdatePostById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid post ID"})
+		return
+	}
 	var post models.Post
 	if err := c.BindJSON(&post); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -80,12 +85,18 @@ func (h *Handler) UpdatePost(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.UpdatePost(post); err != nil {
+	if err := h.service.UpdatePostById(id, post); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, post)
+	new_post, err := h.service.GetPostById(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, new_post)
 }
 
 func (h *Handler) DeletePostById(c *gin.Context) {
