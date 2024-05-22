@@ -7,9 +7,14 @@ import (
 )
 
 func GetEnv() string {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if dbHost := os.Getenv("DB_HOST"); dbHost == "" {
+		err := godotenv.Load()
+		if err != nil {
+			err = godotenv.Load("../.env")
+			if err != nil {
+				log.Fatal("Error loading .env file")
+			}
+		}
 	}
 
 	dbHost := os.Getenv("DB_HOST")

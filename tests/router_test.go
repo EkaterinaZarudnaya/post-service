@@ -13,8 +13,7 @@ import (
 func TestPingRoute(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
+	ginEngine := gin.Default()
 
 	routes.Router(ginEngine)
 
