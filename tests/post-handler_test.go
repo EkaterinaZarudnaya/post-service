@@ -16,9 +16,8 @@ import (
 func TestGetPosts(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	req, err := http.NewRequest(http.MethodGet, "/api/posts/", nil)
@@ -32,9 +31,8 @@ func TestGetPosts(t *testing.T) {
 func TestGetPostById(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	req, err := http.NewRequest(http.MethodGet, "/api/posts/2", nil)
@@ -47,8 +45,8 @@ func TestGetPostById(t *testing.T) {
 
 func TestNewPost(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
+
+	ginEngine := gin.Default()
 
 	routes.Router(ginEngine)
 
@@ -74,9 +72,8 @@ func TestNewPost(t *testing.T) {
 
 func TestUpdatePostById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	postData := map[string]string{
@@ -101,9 +98,8 @@ func TestUpdatePostById(t *testing.T) {
 
 func TestDeletePostByIdNotFound(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	req, err := http.NewRequest(http.MethodDelete, "/api/posts/999", nil)
@@ -116,9 +112,8 @@ func TestDeletePostByIdNotFound(t *testing.T) {
 
 func TestDeletePostById(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	// TODO: change ID
@@ -132,9 +127,8 @@ func TestDeletePostById(t *testing.T) {
 
 func TestNewPostBindJSONError(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	invalidJsonData := `{"user_email": "test_user@gmail.com", "title": "Test user title", "content": "The content of the test user post"`
@@ -152,9 +146,8 @@ func TestNewPostBindJSONError(t *testing.T) {
 
 func TestNewPostValidationError(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	postData := map[string]string{
@@ -179,9 +172,8 @@ func TestNewPostValidationError(t *testing.T) {
 
 func TestUpdatePostByIdBadRequest(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	postData := map[string]string{
@@ -206,9 +198,8 @@ func TestUpdatePostByIdBadRequest(t *testing.T) {
 
 func TestUpdateInvalidPostIDFormat(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	req, err := http.NewRequest(http.MethodPut, "/api/posts/1е", nil)
@@ -223,9 +214,8 @@ func TestUpdateInvalidPostIDFormat(t *testing.T) {
 
 func TestUpdateInvalidJSONFormat(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 	postData := map[string]string{
 		"user_email": "invalid-email",
@@ -249,9 +239,8 @@ func TestUpdateInvalidJSONFormat(t *testing.T) {
 
 func TestUpdateBindJSONError(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	invalidJsonData := `{"user_email": "test_user@gmail.com", "title": "Test user title", "content": "The content of the test user post"`
@@ -270,9 +259,8 @@ func TestUpdateBindJSONError(t *testing.T) {
 
 func TestGetInvalidPostIDFormat(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	ginEngine := gin.New()
-	ginEngine = gin.Default()
 
+	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
 	req, err := http.NewRequest(http.MethodGet, "/api/posts/invalid_id", nil)

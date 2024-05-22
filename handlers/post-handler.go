@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	_ "post-service/docs"
 )
 
 type Handler struct {
@@ -22,6 +23,16 @@ func NewPostHandler(service service.PostService) *Handler {
 	}
 }
 
+// NewPost             godoc
+// Handler functions
+// @Summary Create a new post
+// @Description Create a new post
+// @Tags posts
+// @Accept  json
+// @Produce  json
+// @Param   post body models.Post true "Post to create"
+// @Success 200 {object} models.Post
+// @Router /api/v1/posts/ [post]
 func (h *Handler) NewPost(c *gin.Context) {
 	var post models.Post
 	if err := c.BindJSON(&post); err != nil {
@@ -42,6 +53,14 @@ func (h *Handler) NewPost(c *gin.Context) {
 	c.JSON(http.StatusOK, post)
 }
 
+// GetPosts             godoc
+// @Summary Get all posts
+// @Description Get all posts
+// @Tags posts
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Post
+// @Router /api/v1/posts/ [get]
 func (h *Handler) GetPosts(c *gin.Context) {
 	posts, err := h.service.GetPosts()
 	if err != nil {
@@ -52,6 +71,15 @@ func (h *Handler) GetPosts(c *gin.Context) {
 	c.JSON(http.StatusOK, posts)
 }
 
+// GetPostById             godoc
+// @Summary Get post by ID
+// @Description Get post by ID
+// @Tags posts
+// @Accept  json
+// @Produce  json
+// @Param   id path int true "Post ID"
+// @Success 200 {object} models.Post
+// @Router /api/v1/posts/{id} [get]
 func (h *Handler) GetPostById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -68,6 +96,16 @@ func (h *Handler) GetPostById(c *gin.Context) {
 	c.JSON(http.StatusOK, post)
 }
 
+// UpdatePostById             godoc
+// @Summary Update post by ID
+// @Description Update post by ID
+// @Tags posts
+// @Accept  json
+// @Produce  json
+// @Param   id path int true "Post ID"
+// @Param   post body models.Post true "Post to update"
+// @Success 200 {object} models.Post
+// @Router /api/v1/posts/{id} [put]
 func (h *Handler) UpdatePostById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -99,6 +137,15 @@ func (h *Handler) UpdatePostById(c *gin.Context) {
 	c.JSON(http.StatusOK, newPost)
 }
 
+// DeletePostById             godoc
+// @Summary Delete post by ID
+// @Description Delete post by ID
+// @Tags posts
+// @Accept  json
+// @Produce  json
+// @Param   id path int true "Post ID"
+// @Success 204
+// @Router /api/v1/posts/{id} [delete]
 func (h *Handler) DeletePostById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

@@ -9,11 +9,19 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	docs "post-service/docs"
 )
 
+// @title Post Service API
+// @version 1.0
+// @description API documentation for the Post service
+// @host localhost:8080
+// @BasePath /api/v1
 
 func main() {
     log.Println("Post service is running...")
+
+	docs.SwaggerInfo.BasePath = "/api/v1"
     
     gin.SetMode(gin.ReleaseMode)
 
