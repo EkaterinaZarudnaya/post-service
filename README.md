@@ -33,6 +33,9 @@ make run
 
 To run app in Docker containers, execute the following command in the root directory of your project:
 ```
+docker-compose build
+```
+```
 docker-compose up -d
 ```
 The app will run locally Postgres DB as container.

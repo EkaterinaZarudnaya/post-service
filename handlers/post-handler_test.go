@@ -244,7 +244,7 @@ func TestUpdateBindJSONError(t *testing.T) {
 	routes.Router(ginEngine)
 
 	invalidJsonData := `{"user_email": "test_user@gmail.com", "title": "Test user title", "content": "The content of the test user post"`
-	jsonData, err := json.Marshal(invalidJsonData)
+	jsonData, _ := json.Marshal(invalidJsonData)
 
 	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/2", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)

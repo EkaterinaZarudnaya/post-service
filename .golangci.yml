@@ -7,7 +7,6 @@ linters:
     - nakedret
     - noctx
     - rowserrcheck
-    - structcheck
     - unconvert
     - unparam
   disable:
