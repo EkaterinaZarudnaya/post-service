@@ -1,13 +1,13 @@
-package main
+package routes_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ekaterinazarudnaya/post-service/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"post-service/routes"
 )
 
 func TestPingRoute(t *testing.T) {
@@ -17,7 +17,7 @@ func TestPingRoute(t *testing.T) {
 
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodGet, "/welcome", nil)
+	req, err := http.NewRequest(http.MethodGet, "/api/v1/welcome", nil)
 	assert.NoError(t, err)
 	w := httptest.NewRecorder()
 

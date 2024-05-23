@@ -2,14 +2,15 @@ package routes
 
 import (
 	"net/http"
-	"post-service/configs"
-	"post-service/handlers"
-	service "post-service/services"
 
+	"github.com/ekaterinazarudnaya/post-service/configs"
+	"github.com/ekaterinazarudnaya/post-service/handlers"
+	service "github.com/ekaterinazarudnaya/post-service/services"
+
+	_ "github.com/ekaterinazarudnaya/post-service/docs"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
-	_ "post-service/docs"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Router(router *gin.Engine) {

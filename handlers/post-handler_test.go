@@ -1,4 +1,4 @@
-package main
+package handlers_test
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"post-service/routes"
+	"github.com/ekaterinazarudnaya/post-service/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -20,7 +20,7 @@ func TestGetPosts(t *testing.T) {
 	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodGet, "/api/posts/", nil)
+	req, err := http.NewRequest(http.MethodGet, "/api/v1/posts/", nil)
 	assert.NoError(t, err)
 	w := httptest.NewRecorder()
 
@@ -35,7 +35,7 @@ func TestGetPostById(t *testing.T) {
 	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodGet, "/api/posts/2", nil)
+	req, err := http.NewRequest(http.MethodGet, "/api/v1/posts/2", nil)
 	assert.NoError(t, err)
 	w := httptest.NewRecorder()
 
@@ -59,7 +59,7 @@ func TestNewPost(t *testing.T) {
 	jsonData, err := json.Marshal(postData)
 	assert.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPost, "/api/posts/", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPost, "/api/v1/posts/", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -85,7 +85,7 @@ func TestUpdatePostById(t *testing.T) {
 	jsonData, err := json.Marshal(postData)
 	assert.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPut, "/api/posts/2", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/2", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -102,7 +102,7 @@ func TestDeletePostByIdNotFound(t *testing.T) {
 	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodDelete, "/api/posts/999", nil)
+	req, err := http.NewRequest(http.MethodDelete, "/api/v1/posts/999", nil)
 	assert.NoError(t, err)
 	w := httptest.NewRecorder()
 
@@ -117,7 +117,7 @@ func TestDeletePostById(t *testing.T) {
 	routes.Router(ginEngine)
 
 	// TODO: change ID
-	req, err := http.NewRequest(http.MethodDelete, "/api/posts/18", nil)
+	req, err := http.NewRequest(http.MethodDelete, "/api/v1/posts/20", nil)
 	assert.NoError(t, err)
 	w := httptest.NewRecorder()
 
@@ -133,7 +133,7 @@ func TestNewPostBindJSONError(t *testing.T) {
 
 	invalidJsonData := `{"user_email": "test_user@gmail.com", "title": "Test user title", "content": "The content of the test user post"`
 
-	req, err := http.NewRequest(http.MethodPost, "/api/posts/", bytes.NewBufferString(invalidJsonData))
+	req, err := http.NewRequest(http.MethodPost, "/api/v1/posts/", bytes.NewBufferString(invalidJsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -159,7 +159,7 @@ func TestNewPostValidationError(t *testing.T) {
 	jsonData, err := json.Marshal(postData)
 	assert.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPost, "/api/posts/", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPost, "/api/v1/posts/", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -185,7 +185,7 @@ func TestUpdatePostByIdBadRequest(t *testing.T) {
 	jsonData, err := json.Marshal(postData)
 	assert.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPut, "/api/posts/2", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/2", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -202,7 +202,7 @@ func TestUpdateInvalidPostIDFormat(t *testing.T) {
 	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodPut, "/api/posts/1е", nil)
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/1е", nil)
 	assert.NoError(t, err)
 
 	w := httptest.NewRecorder()
@@ -226,7 +226,7 @@ func TestUpdateInvalidJSONFormat(t *testing.T) {
 	jsonData, err := json.Marshal(postData)
 	assert.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPut, "/api/posts/2", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/2", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -246,7 +246,7 @@ func TestUpdateBindJSONError(t *testing.T) {
 	invalidJsonData := `{"user_email": "test_user@gmail.com", "title": "Test user title", "content": "The content of the test user post"`
 	jsonData, err := json.Marshal(invalidJsonData)
 
-	req, err := http.NewRequest(http.MethodPut, "/api/posts/2", bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest(http.MethodPut, "/api/v1/posts/2", bytes.NewBuffer(jsonData))
 	assert.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -263,7 +263,7 @@ func TestGetInvalidPostIDFormat(t *testing.T) {
 	ginEngine := gin.Default()
 	routes.Router(ginEngine)
 
-	req, err := http.NewRequest(http.MethodGet, "/api/posts/invalid_id", nil)
+	req, err := http.NewRequest(http.MethodGet, "/api/v1/posts/invalid_id", nil)
 	assert.NoError(t, err)
 
 	w := httptest.NewRecorder()

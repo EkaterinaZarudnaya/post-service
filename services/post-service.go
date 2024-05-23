@@ -2,7 +2,8 @@ package service
 
 import (
 	"errors"
-	"post-service/models"
+
+	"github.com/ekaterinazarudnaya/post-service/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -40,26 +41,32 @@ func (s *Service) NewPost(post models.Post) error {
 
 func (s *Service) GetPosts() ([]models.Post, error) {
 	var posts []models.Post
-	err := s.db.Find(&posts).Error
-	return posts, err
+	if err := s.db.Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
 }
 
 func (s *Service) GetPostById(id int) (models.Post, error) {
 	var post models.Post
-	err := s.db.First(&post, id).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return post, errors.New("post not found")
+	if err := s.db.First(&post, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return post, err
+		}
+		return post, err
 	}
-	return post, err
+	return post, nil
 }
 
 func (s *Service) UpdatePostById(id int, updatedPost models.Post) error {
 	var existingPost models.Post
-	err := s.db.First(&existingPost, id).Error
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return errors.New("post not found")
+	if err := s.db.First(&existingPost, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+		return err
 	}
-	
+
 	updatedPost.ID = existingPost.ID
 	return s.db.Model(&existingPost).Updates(updatedPost).Error
 }
@@ -68,11 +75,11 @@ func (s *Service) DeletePostById(id int) error {
 	var post models.Post
 	if err := s.db.First(&post, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errors.New("post not found")
+			return err
 		}
 		return err
 	}
-	
+
 	err := s.db.Delete(&post).Error
 	return err
 }

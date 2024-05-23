@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"errors"
+	"gorm.io/gorm"
 	"net/http"
-	"post-service/models"
-	service "post-service/services"
 	"strconv"
 
+	"github.com/ekaterinazarudnaya/post-service/models"
+	service "github.com/ekaterinazarudnaya/post-service/services"
+
+	_ "github.com/ekaterinazarudnaya/post-service/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	_ "post-service/docs"
 )
 
 type Handler struct {
@@ -36,17 +39,17 @@ func NewPostHandler(service service.PostService) *Handler {
 func (h *Handler) NewPost(c *gin.Context) {
 	var post models.Post
 	if err := c.BindJSON(&post); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON input"})
 		return
 	}
 
 	if err := h.validate.Struct(&post); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "validation error"})
 		return
 	}
 
 	if err := h.service.NewPost(post); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
 	}
 
@@ -64,7 +67,7 @@ func (h *Handler) NewPost(c *gin.Context) {
 func (h *Handler) GetPosts(c *gin.Context) {
 	posts, err := h.service.GetPosts()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error"})
 		return
 	}
 
@@ -89,7 +92,11 @@ func (h *Handler) GetPostById(c *gin.Context) {
 
 	post, err := h.service.GetPostById(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		}
 		return
 	}
 
@@ -112,25 +119,34 @@ func (h *Handler) UpdatePostById(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid post ID"})
 		return
 	}
+
 	var post models.Post
 	if err := c.BindJSON(&post); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON input"})
 		return
 	}
 
 	if err := h.validate.Struct(&post); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "validation error"})
 		return
 	}
 
 	if err := h.service.UpdatePostById(id, post); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		}
 		return
 	}
 
 	newPost, err := h.service.GetPostById(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		}
 		return
 	}
 
@@ -154,7 +170,11 @@ func (h *Handler) DeletePostById(c *gin.Context) {
 	}
 
 	if err := h.service.DeletePostById(id); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "post not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
+		}
 		return
 	}
 
